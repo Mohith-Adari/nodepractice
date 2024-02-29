@@ -1,0 +1,30 @@
+GET http://localhost:3001/states/
+
+###
+POST http://localhost:3001/districts/
+Content-Type: applicaton/json 
+
+{
+  "districtName": "Bagalkot",
+  "stateId": 3,
+  "cases": 2323,
+  "cured": 2000,
+  "active": 315,
+  "deaths": 8
+}
+
+###
+PUT https://localhost:3001/districts/312
+Content-Type: application/json
+
+{
+  "districtName": "Nadia",
+  "stateId": 3,
+  "cases": 9628,
+  "cured": 6524,
+  "active": 3000,
+  "deaths": 104
+}
+
+###
+GET https://localhost:3001/districts/322/
