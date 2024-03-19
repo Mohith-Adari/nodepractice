@@ -1,7 +1,7 @@
-GET http://localhost:3001/states/
+GET http://localhost:3000/states/
 
 ###
-POST http://localhost:3001/districts/
+POST http://localhost:3000/districts/
 Content-Type: applicaton/json 
 
 {
@@ -14,7 +14,7 @@ Content-Type: applicaton/json
 }
 
 ###
-PUT https://localhost:3001/districts/312
+PUT http://localhost:3000/districts/312
 Content-Type: application/json
 
 {
@@ -27,4 +27,10 @@ Content-Type: application/json
 }
 
 ###
-GET https://localhost:3001/districts/322/
+GET http://localhost:3000/districts/322/
+
+###
+GET http://localhost:3000/states/3/stats/
+
+###
+GET http://localhost:3000/districts/322/details/

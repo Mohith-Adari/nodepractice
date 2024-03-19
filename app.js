@@ -35,7 +35,7 @@ const convertingStateTable = (DbObject) => {
   };
 };
 
-const covertingDistrictTabel = (DbObject) => {
+const convertingDistrictTable = (DbObject) => {
   return {
     districtId: DbObject.district_id,
     districtName: DbObject.district_name,
@@ -66,13 +66,13 @@ app.get("/states/:stateId/", async (request, response) => {
 });
 
 app.post("/districts/", async (request, response) => {
-  const { districtName, stateId, cases, cured, active, deaths } = request.body;
+  const { stateId, districtName, cases, cured, active, deaths } = request.body;
 
   const postDistrictQuery = `
     INSERT INTO 
-    district (district_name,state_id,cases,cured,active,deaths)
+    district (state_id,district_name,cases,cured,active,deaths)
     VALUES 
-    ('${districtName}',${stateId},${cases},${cured},${active},${deaths});`;
+    (${stateId},'${districtName}',${cases},${cured},${active},${deaths});`;
   await db.run(postDistrictQuery);
   response.send("District Successfully Added");
 });
@@ -111,6 +111,46 @@ app.put("/districts/:districtId/", async (request, response) => {
     WHERE district_id = ${districtId};`;
   await db.run(putDistrictQuery);
   response.send("District Details Updated");
+});
+
+app.get("/states/:stateId/stats/", async (request, response) => {
+  const { stateId } = request.params;
+  const getStateStatsQuery = `
+    SELECT 
+    SUM(cases),
+    SUM(cured),
+    SUM(active),
+    SUM(deaths)
+    FROM  district
+    WHERE state_id=${stateId};`;
+
+  const stats = await db.get(getStateStatsQuery);
+
+  console.log(stats);
+
+  response.send({
+    totalCases: stats["SUM(cases)"],
+    totalCured: stats["SUM(cured)"],
+    totalActive: stats["SUM(active)"],
+    totalDeaths: stats["SUM(deaths)"],
+  });
+});
+
+app.get("/districts/:districtId/details/", async (request, response) => {
+  const { districtId } = request.params;
+  const getStateId = `
+  SELECT state_id
+  FROM district
+  WHERE district_id = ${districtId};`;
+
+  const stateId = await db.get(getStateId);
+  const getStateNameQuery = `
+  SELECT state_name as stateName
+  FROM state
+  WHERE state_id = ${stateId.state_id};`;
+
+  const stateName = await db.get(getStateNameQuery);
+  response.send(stateName);
 });
 
 module.exports = app;
